@@ -1,0 +1,45 @@
+<link rel="import" href="packages/polymer/polymer.html">
+<link rel="import" href="packages/paper_elements/paper_button.html">
+<link rel="import" href="packages/paper_elements/paper_input.html">
+
+<polymer-element name="daily-opd-create-log-entry-form">
+  <template>
+    <style>
+      .consultant-sel{
+        border-top: none;
+        border-left: none;
+        border-right: none;
+        border-bottom: 1px solid #757575;
+        position: relative;
+        top: -15px;
+      }
+      .fee-input{
+        position: relative;
+        top: 6px;
+      }
+    </style>
+    <!-- create/edit log entry form -->
+    <form id="form">
+      <paper-input floatinglabel value="{{ inputData['input_fields']['patient_info']['value'] }}" id="patient-info-input" on-change="{{ inputFieldsEH }}" label="Patient Information"></paper-input>
+      <!-- Consultant selector -->
+      <select class="consultant-sel" id="consultant-select" on-change="{{ inputFieldsEH }}">
+        <option template repeat="{{ consultant in consultantsList }}" value="{{ consultant['_id'] }}">{{ consultant['name'] }}</option>
+      </select>
+      <!-- Fee -->
+      <paper-input value="{{ inputData['input_fields']['consultant_fee']['value'] }}" floatinglabel id="fee-input" type="numbers" on-change="{{ inputFieldsEH }}" class="fee-input" validate="^[0-9]*$" error="Only numbers are allowed" label="Fee" ></paper-input>
+      <!-- Remarks -->
+      <paper-input id="remarks" on-change="{{ inputFieldsEH }}" value="{{ inputData['input_fields']['remarks']['value'] }}" floatinglabel rows="3" label="Remarks" ></paper-input>
+      <!-- button control -->
+      <template if="{{ submitControl['show'] }}">
+        <template if="{{ submitControl['enabled'] }}">
+          <paper-button raisedButton on-click="{{ formSubmitEH }}" label="{{ submitControl['label'] }}"></paper-button>
+        </template>
+        <template if="{{ !submitControl['enabled'] }}">
+          <paper-button raisedButton on-click="{{ formSubmitEH }}" label="{{ submitControl['label'] }}" disabled></paper-button>
+        </template>
+      </template>
+    </form>
+    <!-- create log entry form ends -->
+  </template>
+  <script type="application/dart" src="daily-opd-create-log-entry-form.dart"></script>
+</polymer-element>

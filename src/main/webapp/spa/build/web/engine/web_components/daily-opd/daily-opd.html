@@ -1,0 +1,166 @@
+<link rel="import" href="packages/polymer/polymer.html">
+<link rel="import" href="packages/paper_elements/paper_button.html">
+<link rel="import" href="packages/paper_elements/paper_input.html">
+<link href="packages/paper_elements/paper_dialog_transition.html" rel="import">
+<link href="packages/paper_elements/paper_dialog.html" rel="import">
+<link rel="import" href="packages/paper_elements/paper_tabs.html">
+<!-- import daily-opd-create-log-entry-form -->
+<link rel="import" href="../daily-opd-create-log-entry-form/daily-opd-create-log-entry-form.html">
+
+<polymer-element name="daily-opd">
+  <template>
+    <style>
+      #create-log-entry-form input{
+        width: 250px;
+      }
+      .numeric-cell{
+        text-align: right;
+      } 
+      .log-entry-col{
+        border-bottom: 1px solid lightgray;
+        border-right: 1pt solid lightgray;
+        font-size: 12px;
+        padding: 14px;
+      }
+      #log-entries-section{
+        margin-top: 27px;
+      }
+      #log-entries-table{
+        border-spacing: 0px;
+      }
+      .tableHeaderRow{
+        height: 24px;
+      }
+      .s-no-col{
+        background-color: #F8F8F8;
+        border-left: 1px solid;
+        border-right: 1px solid;
+      }
+      tr:HOVER{
+        background-color: cornsilk;
+      }
+      tr:HOVER .le-edit-controls{
+        display: block;
+      }
+      th{
+        padding: 14px;
+        border-right: 1px solid gray;
+        font: normal 13px arial,sans-serif;
+        background-color: #F8F8F8;
+        font-weight: bold;
+        border-bottom: 1px solid;
+        border-top: 1px solid;
+      }
+      .time-stamp{
+        text-align: center;
+      }
+      .date-sec {
+        width: 162px;
+        background-color: skyblue;
+        height: 17px;
+        padding: 9px;
+        font-weight: bold;
+      }
+      .le-edit-controls{
+        display: none;
+        font-weight: bold;
+        color: brown;
+        font-size: 19px;
+        background-color: white;
+        border: none;
+      }
+      .le-edit-controls a{
+       text-decoration: none;
+      }
+      paper-dialog {
+        position : fixed;
+        left: 188px;
+        width: 75%;
+      }
+      #edit-log-entry-form{
+        margin-top: 35px;
+      }
+      .hosp-net-income-view{
+        display: block;
+        float: right;
+        position: absolute;
+        top: 68px;
+        right: 84px;
+      }
+    </style>
+    <daily-opd-create-log-entry-form on-formsubmit="{{ addEditLogEntryEH }}" consultantsList="{{ consultants }}" inputFieldsData="{{ viewData['log_entry_form']['input_fields'] }}" formType="add" submitControlData="{{ viewData['log_entry_form']['submit_btn']('add') }}" ></daily-opd-create-log-entry-form>
+    <!-- create log entry form ends -->
+    <div id="log-entries-section">
+      <div class="date-sec">
+        {{ document['date'] }}
+      </div>
+      <table id="log-entries-table">
+        <thead>
+          <tr class="tableHeaderRow">
+              <th template repeat="{{ heading in viewData['header']['left_cols'] }}">
+                {{ heading }}
+              </th>
+              <!-- dynamic center columns starts -->
+              <th template repeat="{{ consultant in consultants }}">
+                {{ consultant['name'] }}
+              </th>
+              <th template repeat="{{ consultant in consultants }}">
+                {{ consultant['name'] }} {{ consultant['daily_opd_rate%'] }}%
+              </th>
+              <!-- dynamic center columns ends -->
+              <th template repeat="{{ heading in viewData['header']['right_cols'] }}">
+                {{ heading }}
+              </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr template repeat="{{ logEntry in document['log_entries'] }}">
+            <td class="log-entry-col s-no-col">{{ logEntry['#'] }}</td>
+            <td class="time-stamp log-entry-col">{{ logEntry['time_stamp'] }}</td>
+            <td class="log-entry-col">{{ logEntry['patient_info'] }}</td>
+            <!-- consultant fee -->
+            <td class="numeric-cell log-entry-col" template repeat="{{ consultant in consultants }}">
+              <template if="{{ consultant['_id'] == logEntry['consultant'] }}">{{ logEntry['fee'] }}</template>
+            </td>
+            <!-- consultant rate -->
+            <td class="numeric-cell log-entry-col" template repeat="{{ consultant in consultants }}">
+              <template if="{{ consultant['_id'] == logEntry['consultant'] }}">{{ logEntry['consultant_rate%'] }}</template>
+            </td>
+            <!-- net income -->
+            <td class="numeric-cell log-entry-col">{{ logEntry['net_hospital_income'] }}</td>
+            <!-- remarks -->
+            <td class="log-entry-col">{{ logEntry['remarks'] }}</td>
+            <!-- Edit controls -->
+            <td class="le-edit-controls">
+              <a href="#" entry-index="{{ logEntry['#'] }}" on-click="{{ editLogEntryEH }}">Edit</a>
+              <span style="margin: 3px">|</span>
+              <a href="#" entry-index="{{ logEntry['#'] }}" on-click="{{ deleteLogEntryEH }}">Delete</a>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td style="border-left: 1px solid lightgray; border-bottom: 1px solid lightgray"></td>
+            <td style="border-bottom: 1px solid lightgray"></td>
+            <td style="border-right: 1px solid lightgray; border-bottom: 1px solid lightgray">TOTAL</td>
+            <td class="numeric-cell log-entry-col" template repeat="{{ consultant in consultants }}">
+              {{ document['consultants_net_amounts'][ consultant['_id'].toString() ]['net_fee'] }}
+            </td>
+            <td class="numeric-cell log-entry-col" template repeat="{{ consultant in consultants }}">
+              {{ document['consultants_net_amounts'][ consultant['_id'].toString() ]['net_%'] }}
+            </td>
+            <td class="numeric-cell log-entry-col">{{ document['hosp_net_income'] }}</td>
+           </tr>
+        </tfoot>
+      </table>
+    </div>
+    <div class="hosp-net-income-view">
+      <h3>Hospital income: </h3><span>{{ document['hosp_net_income'] }}</span>
+    </div>
+    <paper-dialog id="edit-log-entry-dialog" heading="Update Log Entry" transition="paper-dialog-transition-center">
+      <div id="edit-log-entry-form"></div>
+      <paper-button label="Close" affirmative raisedButton></paper-button>
+    </paper-dialog>
+  </template>
+  <script type="application/dart" src="daily-opd.dart"></script>
+</polymer-element>

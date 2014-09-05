@@ -1,0 +1,26 @@
+<link rel="import" href="packages/polymer/polymer.html">
+<polymer-element name="test-component">
+  <template>
+    <style>
+      .person-name{
+        color: blue;
+      }
+      .person-points{
+        color: orange;
+      }
+      ul{
+        list-style: none;
+      }
+    </style>
+    <ul>
+      <template repeat="{{ item in map['list'] }}">
+        <li>
+            <span class="person-name">{{ item['name'] }}</span>
+            <span class="person-points">{{ item['points'] }}</span>
+            <button on-click="{{ addPointsEH }}">Add Points</button>
+        </li>
+      </template>
+    </ul>
+  </template>
+  <script type="application/dart" src="test-component.dart"></script>
+</polymer-element>
