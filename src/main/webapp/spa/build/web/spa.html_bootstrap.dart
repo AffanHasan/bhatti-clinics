@@ -24,7 +24,7 @@ import 'package:paper_elements/paper_tab.dart' as i18;
 import 'package:paper_elements/paper_tabs.dart' as i19;
 import 'engine/web_components/daily-opd-create-log-entry-form/daily-opd-create-log-entry-form.dart' as i20;
 import 'engine/web_components/daily-opd/daily-opd.dart' as i21;
-import 'spa.html.0.dart' as i22;
+import 'engine/init-library/init.dart' as i22;
 import 'package:smoke/smoke.dart' show Declaration, PROPERTY, METHOD;
 import 'package:smoke/static.dart' show useGeneratedCode, StaticConfiguration;
 import 'engine/web_components/daily-opd-create-log-entry-form/daily-opd-create-log-entry-form.dart' as smoke_0;
