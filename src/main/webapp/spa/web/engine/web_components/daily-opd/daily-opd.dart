@@ -4,6 +4,7 @@ import 'package:intl/intl.dart' as intl;
 import '../daily-opd-create-log-entry-form/daily-opd-create-log-entry-form.dart' as customForm;
 import 'package:paper_elements/paper_dialog.dart' as paper_dialog;
 import 'package:logging/logging.dart' as logging;
+import '../../common-data-lib/common-data-lib.dart' as common_data show consultantsList, domainName;
 /**
  * A Polymer click counter element.
  */
@@ -33,19 +34,7 @@ class DailyOPD extends PolymerElement {
   //Sent by the server in this form
   });
 
-  List consultants = [{
-      "_id": 1,
-      "name": "Dr. Imtiaz Bhatti",
-      "daily_opd_rate%": 60
-    }, {
-      "_id": 2,
-      "name": "Dr. Khalid Bhatti",
-      "daily_opd_rate%": 60
-    }, {
-      "_id": 3,
-      "name": "Dr. Mumtaz Laghari",
-      "daily_opd_rate%": 70
-    }];
+  List consultants = toObservable([]);
 
   Map viewData = toObservable({
     "header": {
@@ -90,7 +79,21 @@ class DailyOPD extends PolymerElement {
 
   attached() {
     super.attached();
-
+    consultants.addAll(common_data.consultantsList);
+    /*
+    _logger.info("First Call");
+    HttpRequest.getString(common_data.domainName + "/bhatti-clinics-mis/rest/members").then(
+        ( response ){
+          _logger.info("First URL : " + response.toString());
+        }
+    );
+    _logger.info("Second Call");
+    HttpRequest.getString(common_data.domainName + "/bhatti-clinics-mis/rest/members").then(
+        ( response ){
+          _logger.info("Second URL : " + response.toString());
+        }
+    );
+    */
   }
 
   DailyOPD.created() : super.created() {
