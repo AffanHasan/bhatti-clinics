@@ -6,8 +6,8 @@ import 'dart:convert' show JSON;
 List _consultantsList;
 List get consultantsList => _consultantsList;
 
-//final String domainName = "http://localhost:8080/bhatti-clinics-mis";
-final String domainName = "http://mis-bhatticlinics.rhcloud.com";
+final String domainName = "http://localhost:8080/bhatti-clinics-mis";
+//final String domainName = "http://mis-bhatticlinics.rhcloud.com";
 
 main(){
 //  Getting consultants list by making a synchronous http request 

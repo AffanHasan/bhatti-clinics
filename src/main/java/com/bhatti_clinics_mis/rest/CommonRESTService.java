@@ -10,7 +10,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 
+import com.bhatti_clinics_mis.util.customcdiqualifiers.CORSHeaderResponseBuilder;
 import com.mongodb.DB;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
@@ -22,6 +24,10 @@ public class CommonRESTService {
    @Inject
    private DB dbConnection;
    
+   @Inject
+   @CORSHeaderResponseBuilder
+   private ResponseBuilder corsResponseBuilder;
+   
    @GET
    @Path("/consultantslist")
    @Produces(MediaType.APPLICATION_JSON)
@@ -31,12 +37,7 @@ public class CommonRESTService {
 		while(dbCursor.hasNext()){
 			documents.add(dbCursor.next());
 		}
-		Response response = Response.ok()
-				   .header("Access-Control-Allow-Origin", "*")
-				   .header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE")
-				   .header("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept")
-				   .entity(documents)
-				   .build();
-		return response;
+		corsResponseBuilder.entity(documents);
+		return corsResponseBuilder.build();
    }
 }
