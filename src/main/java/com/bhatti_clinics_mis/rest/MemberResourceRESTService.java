@@ -1,6 +1,7 @@
 package com.bhatti_clinics_mis.rest;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -22,10 +23,14 @@ import com.bhatti_clinics_mis.model.Member;
 public class MemberResourceRESTService {
    @Inject
    private EntityManager em;
+   
+   @Inject
+   private Logger log;
 
    @GET
    @Produces("text/xml")
    public List<Member> listAllMembers() {
+	   log.info("returnung all the members");
       // Use @SupressWarnings to force IDE to ignore warnings about "genericizing" the results of
       // this query
       @SuppressWarnings("unchecked")

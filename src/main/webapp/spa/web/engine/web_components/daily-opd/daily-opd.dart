@@ -14,7 +14,7 @@ class DailyOPD extends PolymerElement {
   logging.Logger _logger = new logging.Logger("daily-opd");
 
   Map document = toObservable({
-    "date": new intl.DateFormat("E MMMM d, y", "en_US").format(new DateTime.now()),
+    "date": { "day" : "Fri", "month" : "sep", "year" : "" },
     "log_entries": [],
     "hosp_net_income": 0,
     "consultants_net_amounts": {
@@ -80,20 +80,6 @@ class DailyOPD extends PolymerElement {
   attached() {
     super.attached();
     consultants.addAll(common_data.consultantsList);
-    /*
-    _logger.info("First Call");
-    HttpRequest.getString(common_data.domainName + "/bhatti-clinics-mis/rest/members").then(
-        ( response ){
-          _logger.info("First URL : " + response.toString());
-        }
-    );
-    _logger.info("Second Call");
-    HttpRequest.getString(common_data.domainName + "/bhatti-clinics-mis/rest/members").then(
-        ( response ){
-          _logger.info("Second URL : " + response.toString());
-        }
-    );
-    */
   }
 
   DailyOPD.created() : super.created() {

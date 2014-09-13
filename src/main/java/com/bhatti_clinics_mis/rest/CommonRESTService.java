@@ -1,7 +1,7 @@
 package com.bhatti_clinics_mis.rest;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -12,32 +12,35 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
-import com.bhatti_clinics_mis.util.customcdiqualifiers.CORSHeaderResponseBuilder;
-import com.mongodb.DB;
-import com.mongodb.DBCursor;
+import com.bhatti_clinics_mis.util.enums.CommonResourcesTypes;
+import com.bhatti_clinics_mis.util.qualifiers.CommonResource;
 import com.mongodb.DBObject;
 
+/**
+ * <p>This rest service is intended for providing the mis wide common resources</p>
+ * @author affan.hasan
+ *
+ */
 @Path("/common")
 @RequestScoped
 public class CommonRESTService {
-
+	
    @Inject
-   private DB dbConnection;
+   private Logger logger;
+	
+   @Inject
+   @CommonResource(CommonResourcesTypes.CORS_HEADERS_RESPONSE_BUILDER)
+   private ResponseBuilder corsResponseBuilder;
    
    @Inject
-   @CORSHeaderResponseBuilder
-   private ResponseBuilder corsResponseBuilder;
+   @CommonResource(CommonResourcesTypes.CONSULTANTS_LIST)
+   private List<DBObject> consultantsList;
    
    @GET
    @Path("/consultantslist")
    @Produces(MediaType.APPLICATION_JSON)
    public Response listAllMembers() {
-	   	List<DBObject> documents = new ArrayList<DBObject>();
-		DBCursor dbCursor =  dbConnection.getCollection("consultants").find();
-		while(dbCursor.hasNext()){
-			documents.add(dbCursor.next());
-		}
-		corsResponseBuilder.entity(documents);
+		corsResponseBuilder.entity(consultantsList);
 		return corsResponseBuilder.build();
    }
 }
